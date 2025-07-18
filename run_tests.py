@@ -9,7 +9,7 @@ TABLE_NAME = 'sales'
 # Connect to PostgreSQL
 pg_engine = sqlalchemy.create_engine(PG_CONN_STR)
 # Connect to DuckDB (in memory store)
-duckdb_conn = duckdb.connect(database=':memory:', read_only=False)
+duckdb_con = duckdb.connect(database=':memory:', read_only=False)
 
 # Step 1: Load data
 print("Loading data into databases...")
@@ -22,7 +22,7 @@ print(f"PostgreSQL load time: {time.time() - start:.2f}s")
 
 # Load into DuckDB
 start = time.time()
-duckdb_conn.execute("CREATE TABLE sales AS SELECT * FROM df")
+duckdb_con.execute("CREATE TABLE sales AS SELECT * FROM df")
 print(f"DuckDB load time: {time.time() - start:.2f}s")
 print("-" * 20)
 
@@ -36,3 +36,25 @@ start = time.time()
 with pg_engine.connect() as con:
     res_pg = con.execute(sqlalchemy.text(f"SELECT * FROM {TABLE_NAME} WHERE transaction_id = '{transaction_id_to_find}'")).fetchone()
 print(f"PostgreSQL time: {time.time() - start:.6f}s")
+
+# Compare with primary key applied
+with pg_engine.connect() as con:
+    con.execute(sqlalchemy.text(f'ALTER TABLE {TABLE_NAME} ADD PRIMARY KEY (transaction_id);'))
+    con.commit()
+
+
+start = time.time()
+with pg_engine.connect() as con:
+    res_pg_indexed = con.execute(sqlalchemy.text(f"SELECT * FROM {TABLE_NAME} WHERE transaction_id = '{transaction_id_to_find}'")).fetchone()
+
+pg_indexed_time = time.time() - start
+print(f"PostgreSQL time (with Primary Key Index): {pg_indexed_time:.6f}s")
+
+# DuckDB query
+start = time.time()
+res_duck = duckdb_con.execute(f"SELECT * FROM {TABLE_NAME} WHERE transaction_id = ?", [transaction_id_to_find]).fetchone()
+duckdb_time = time.time() - start
+print(f"DuckDB time: {duckdb_time:.6f}s")
+print(f"Winner: {'PostgreSQL (with index)' if pg_indexed_time < duckdb_time else 'DuckDB'}")
+print("-" * 20)
+
