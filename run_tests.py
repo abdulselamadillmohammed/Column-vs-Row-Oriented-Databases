@@ -62,13 +62,13 @@ print("-" * 20)
 print("\n--- Test 2: Aggregating across millions of rows (OLAP workload) ---")
 query = "SELECT store_id, SUM(quantity * unit_price * (1 - discount)) AS total_revenue FROM sales GROUP BY store_id"
 
-# PostgreSQL Query 
+# PostgreSQL Query
 start = time.time()
 pd.read_sql(query, pg_engine)
 pg_time = time.time() - start
 print(f"PostgreSQL time: {pg_time:.2f}s")
 
-# DuckDB query 
+# DuckDB query
 start = time.time()
 duckdb_con.execute(query).fetchdf()
 duckdb_time = time.time() - start
@@ -76,3 +76,22 @@ print(f"DuckDB time: {duckdb_time:.2f}s")
 print(f"Winner: {'PostgreSQL' if pg_time < duckdb_time else 'DuckDB'}")
 print("-" * 20)
 
+# Test 3: Indexed Aggregation
+print("\n--- Test 3: Re-running aggregation with an index on PostgreSQL ---")
+
+index_query = "CREATE INDEX idx_sales_for_agg ON sales (store_id, quantity, unit_price, discount);"
+with pg_engine.connect() as con:
+    print("Creating index on PostgreSQL for aggregation...")
+    start = time.time()
+    con.execute(sqlalchemy.text(index_query))
+    con.commit()
+    print(f"Index creation time: {time.time() - start:.2f}s")
+
+# Re-run query on postgres
+start = time.time()
+pd.read_sql(query, pg_engine)
+pg_indexed_agg_time = time.time() - start
+print(f"PostgreSQL time (with index): {pg_indexed_agg_time:.2f}s")
+print(f"DuckDB time (no index needed): {duckdb_time:.2f}s") # Using previous DuckDB time
+print(f"Winner: {'PostgreSQL (with index)' if pg_indexed_agg_time < duckdb_time else 'DuckDB'}")
+print("-" * 20)
