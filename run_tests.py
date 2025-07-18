@@ -58,3 +58,21 @@ print(f"DuckDB time: {duckdb_time:.6f}s")
 print(f"Winner: {'PostgreSQL (with index)' if pg_indexed_time < duckdb_time else 'DuckDB'}")
 print("-" * 20)
 
+# Test 2: Wide Aggregation (OLAP)
+print("\n--- Test 2: Aggregating across millions of rows (OLAP workload) ---")
+query = "SELECT store_id, SUM(quantity * unit_price * (1 - discount)) AS total_revenue FROM sales GROUP BY store_id"
+
+# PostgreSQL Query 
+start = time.time()
+pd.read_sql(query, pg_engine)
+pg_time = time.time() - start
+print(f"PostgreSQL time: {pg_time:.2f}s")
+
+# DuckDB query 
+start = time.time()
+duckdb_con.execute(query).fetchdf()
+duckdb_time = time.time() - start
+print(f"DuckDB time: {duckdb_time:.2f}s")
+print(f"Winner: {'PostgreSQL' if pg_time < duckdb_time else 'DuckDB'}")
+print("-" * 20)
+
