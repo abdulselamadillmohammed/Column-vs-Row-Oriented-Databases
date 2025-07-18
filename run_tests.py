@@ -30,3 +30,9 @@ print("-" * 20)
 print("\n--- Test 1: Fetching a single full record (OLTP workload) ---")
 # Get a transaction_id in the middle of the table to query
 transaction_id_to_find = df['transaction_id'].iloc[len(df) // 2]
+
+# PostgreSQL query
+start = time.time()
+with pg_engine.connect() as con:
+    res_pg = con.execute(sqlalchemy.text(f"SELECT * FROM {TABLE_NAME} WHERE transaction_id = '{transaction_id_to_find}'")).fetchone()
+print(f"PostgreSQL time: {time.time() - start:.6f}s")
