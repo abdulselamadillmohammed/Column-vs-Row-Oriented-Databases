@@ -19,3 +19,10 @@ data = {
     'unit_price': [round(random.uniform(5.0, 500.0), 2) for _ in range(num_records)],
     'discount': [round(random.uniform(0.0, 0.25), 2) for _ in range(num_records)]
 }
+
+df = pd.DataFrame(data)
+df.to_csv('sales_data.csv', index=False)
+
+end_time = time.time()
+print(f"Data generation complete. Saved to sales_data.csv")
+print(f"Time taken: {end_time - start_time:.2f} seconds")
