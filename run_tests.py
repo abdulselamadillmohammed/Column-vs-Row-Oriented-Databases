@@ -17,7 +17,7 @@ df = pd.read_csv('sales_data.csv')
 
 # Load into PostgreSQL (row-oriented database)
 start = time.time()
-df.to_sql(TABLE_NAME, pg_engine, if_exists='replace', index=False, chuncksize=10000)
+df.to_sql(TABLE_NAME, pg_engine, if_exists='replace', index=False, chunksize=10000)
 print(f"PostgreSQL load time: {time.time() - start:.2f}s")
 
 # Load into DuckDB
