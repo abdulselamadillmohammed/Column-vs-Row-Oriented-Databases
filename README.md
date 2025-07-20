@@ -57,7 +57,9 @@ With an index:
 📌 **Why PostgreSQL wins OLTP:**
 Rows are stored together; indexed lookups are fast and efficient.
 
-> ![](./assets/one.jpeg) > ![](./assets/two.jpeg) > ![](./assets/three.jpeg)
+![](./assets/one.jpeg)
+![](./assets/two.jpeg)
+![](./assets/three.jpeg)
 
 ---
 
@@ -71,39 +73,8 @@ It only reads the relevant columns—no wasted I/O on unused data.
 
 Even with an index, PostgreSQL cannot match the inherent efficiency of column-stores.
 
-> ![](./assets/four.jpeg) > ![](./assets/five.jpeg)
->
+![](./assets/four.jpeg)
+![](./assets/five.jpeg)
+
 > - **Row-oriented layout**: Rows with multiple columns, showing skipped data
 > - **Column-oriented layout**: Blocks of each column, highlighting efficient reads
-
----
-
-## 🧠 For Your Own Knowledge: A Simpler Explanation
-
-Imagine your data as a **giant spreadsheet**:
-
-### Row-Oriented = **Standard Spreadsheet** (PostgreSQL)
-
-- Data stored: `Row 1: [ID, Name, Age]`, `Row 2: [ID, Name, Age]`, ...
-- **Fetching a person’s info**: Very fast (entire row is together)
-- **Averaging all ages**: Inefficient—you read everything just to get to "Age"
-
-### Column-Oriented = **Flipped Spreadsheet** (DuckDB)
-
-- Data stored: `[All IDs]`, `[All Names]`, `[All Ages]`
-- **Averaging all ages**: Extremely fast—just read the "Age" column
-- **Fetching one person’s info**: Slower—must look across all columns
-
-🎯 **Trade-off:**
-
-- **PostgreSQL** is great for full-row operations
-- **DuckDB** is great for column-level aggregations
-
----
-
-## ✅ Conclusion
-
-- 🗃️ **Use a Row-Oriented DB** (PostgreSQL, MySQL) for **OLTP** (e.g., user info, transactions)
-- 📊 **Use a Column-Oriented DB** (DuckDB, ClickHouse) for **OLAP** (e.g., analytics, reporting)
-
-Choose the right tool for the job—not just the "fastest" one!
