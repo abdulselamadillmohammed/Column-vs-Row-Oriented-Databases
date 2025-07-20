@@ -57,8 +57,7 @@ With an index:
 📌 **Why PostgreSQL wins OLTP:**
 Rows are stored together; indexed lookups are fast and efficient.
 
-> 🔽 _Insert Diagram:_
-> B-Tree index ➡ direct pointer ➡ entire row highlighted in memory page
+> ![](./assets/one.jpeg) > ![](./assets/two.jpeg) > ![](./assets/three.jpeg)
 
 ---
 
@@ -72,7 +71,7 @@ It only reads the relevant columns—no wasted I/O on unused data.
 
 Even with an index, PostgreSQL cannot match the inherent efficiency of column-stores.
 
-> ![](./assets/one.jpeg)
+> ![](./assets/four.jpeg) > ![](./assets/five.jpeg)
 >
 > - **Row-oriented layout**: Rows with multiple columns, showing skipped data
 > - **Column-oriented layout**: Blocks of each column, highlighting efficient reads
