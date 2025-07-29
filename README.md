@@ -64,7 +64,6 @@ Rows are stored together; indexed lookups are fast and efficient.
 ---
 
 ### 🔹 Test 2 & 3: Aggregating Data (OLAP)
-
 - **DuckDB dominates** due to columnar storage.
 - Aggregations like `SUM(quantity * unit_price)` only read the necessary columns.
 
