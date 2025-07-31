@@ -16,6 +16,7 @@ It answers the question:
 The benchmark evaluates two main database use cases:
 
 - **OLTP (Online Transaction Processing)** – Fetching individual, complete records
+
 - **OLAP (Online Analytical Processing)** – Aggregating data across millions of rows
 
 ---
