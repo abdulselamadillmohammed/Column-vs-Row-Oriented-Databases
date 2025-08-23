@@ -67,6 +67,7 @@ Rows are stored together; indexed lookups are fast and efficient.
 - **DuckDB dominates** due to columnar storage.
 - Aggregations like `SUM(quantity * unit_price)` only read the necessary columns.
 
+
 📌 **Why DuckDB wins OLAP:**
 It only reads the relevant columns—no wasted I/O on unused data.
 
